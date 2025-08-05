@@ -93,12 +93,14 @@ clearNow()
 
 # // Checker Ethereum Balance From Atomic Wallet //
 def CheckBalanceEthereum(address: str) -> str:
-    url = f"https://ethbook.guarda.co/api/v2/address/{address}"
-    req = requests.get(url)
-    if req.status_code == 200:
-        bal = req.json()["txs"]
+    try:
+        url = f"https://ethbook.guarda.co/api/v2/address/{address}"
+        req = requests.get(url, timeout=10)
+        req.raise_for_status()  # Raises HTTPError for bad responses (4xx or 5xx)
+        bal = req.json().get("txs", 0)
         return str(bal)
-    else:
+    except Exception as e:
+        print(f"Error checking Ethereum balance: {e}")
         return "0"
 
 
@@ -115,12 +117,14 @@ def CheckBalanceDogecoin(address: str) -> str:
 
 # // Checker BNB Balance From Atomic Wallet //
 def CheckBalanceBNB(address: str) -> str:
-    url = f"https://bsc-nn.atomicwallet.io/api/v2/address/{address}"
-    req = requests.get(url)
-    if req.status_code == 200:
-        bal = req.json()["txs"]
+    try:
+        url = f"https://bsc-nn.atomicwallet.io/api/v2/address/{address}"
+        req = requests.get(url, timeout=10)
+        req.raise_for_status()  # Raise exception for bad HTTP responses
+        bal = req.json().get("txs", 0)
         return str(bal)
-    else:
+    except Exception as e:
+        print(f"Error checking BNB balance: {e}")
         return "0"
 
 
